@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<title>Packt Python Graph</title>
 	<script type="text/javascript" src="static/js/jqueryv1.11.3/jqueryv1.11.3.min.js"></script>
 	<script type="text/javascript" src="static/js/bootstrapv3.3.5/bootstrap.min.js"></script>
 	<script type="text/javascript" src="static/js/sigmajsv1.0.3/sigma.min.js"></script>
 	<script type="text/javascript" src="static/js/sigmajsv1.0.3/plugins/sigma.parsers.json.min.js"></script>
+	<script type="text/javascript" src="static/js/sigmajsv1.0.3/plugins/sigma.layout.forceAtlas2.json.min.js"></script>
+
 	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
+	<style type="text/css">
+	  #container {
+	    max-width: 1200px;
+	    height: 1200px;
+	    margin: auto;
+	  }
+	</style>
 </head>
 <body>
 	<h1>This is a graph of all the Packt Python content and topics!</h1>
 	<div id="container"></div>
+
 <script type="text/javascript">
   sigma.parsers.json('static/data/testData.json', {
     container: 'container',
