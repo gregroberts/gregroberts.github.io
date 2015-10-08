@@ -5,30 +5,483 @@
 	<title>Packt Python Graph</title>
 	<script type="text/javascript" src="static/js/jqueryv1.11.3/jqueryv1.11.3.min.js"></script>
 	<script type="text/javascript" src="static/js/bootstrapv3.3.5/bootstrap.min.js"></script>
-	<script type="text/javascript" src="static/js/sigmajsv1.0.3/sigma.min.js"></script>
-	<script type="text/javascript" src="static/js/sigmajsv1.0.3/plugins/sigma.parsers.json.min.js"></script>
-	<script type="text/javascript" src="static/js/sigmajsv1.0.3/plugins/sigma.layout.forceAtlas2.json.min.js"></script>
-
+	<script type="text/javascript" src="static/js/Linkurious/sigma.min.js"></script>
+	<script type="text/javascript" src="static/js/Linkurious/plugins/sigma.parsers.gexf.min.js"></script>
+	<script type="text/javascript" src="static/js/Linkurious/plugins/sigma.renderers.customEdgeShapes.min.js"></script>
+	<script type="text/javascript" src="static/js/Linkurious/plugins/sigma.renderers.halo.min.js"></script>
+	<script type="text/javascript" src="static/js/Linkurious/plugins/sigma.helpers.graph.min.js"></script>
+	<script src="static/js/Linkurious/plugins/sigma.plugins.tooltips.min.js"></script>
+	<script src="static/js/Linkurious/plugins/sigma.plugins.animate.min.js"></script>
+	<script src="static/js/Linkurious/plugins/sigma.plugins.filter.min.js"></script>
+	<script src="static/js/Linkurious/plugins/sigma.layout.forceAtlas2.min.js"></script>	
 	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
 	<style type="text/css">
 	  #container {
-	    max-width: 1200px;
-	    height: 1200px;
-	    margin: auto;
+		max-width: 1500px;
+		height: 850px;
+		margin: auto;
+		background-color: #2c3e50;
 	  }
+
+	.sigma-tooltip {
+	  max-width: 240px;
+	  max-height: 280px;
+	  background-color: rgb(249, 247, 237);
+	  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+	  border-radius: 6px;
+	}
+
+	.sigma-tooltip-header {
+	  font-variant: small-caps;
+	  font-size: 120%;
+	  color: #437356;
+	  border-bottom: 1px solid #aac789;
+	  padding: 10px;
+	}
+
+	.sigma-tooltip-body {
+	  padding: 10px;
+	}
+
+	.sigma-tooltip-body th {
+	  color: #999;
+	  text-align: left;
+	}
+
+	.sigma-tooltip-footer {
+	  padding: 10px;
+	  border-top: 1px solid #aac789;
+	}
+
+	.sigma-tooltip > .arrow {
+	  border-width: 10px;
+	  position: absolute;
+	  display: block;
+	  width: 0;
+	  height: 0;
+	  border-color: transparent;
+	  border-style: solid;
+	}
+
+	.sigma-tooltip.top {
+	  margin-top: -12px;
+	}
+	.sigma-tooltip.top > .arrow {
+	  left: 50%;
+	  bottom: -10px;
+	  margin-left: -10px;
+	  border-top-color: rgb(249, 247, 237);
+	  border-bottom-width: 0;
+	}
+
+	.sigma-tooltip.bottom {
+	  margin-top: 12px;
+	}
+	.sigma-tooltip.bottom > .arrow {
+	  left: 50%;
+	  top: -10px;
+	  margin-left: -10px;
+	  border-bottom-color: rgb(249, 247, 237);
+	  border-top-width: 0;
+	}
+
+	.sigma-tooltip.left {
+	  margin-left: -12px;
+	}
+	.sigma-tooltip.left > .arrow {
+	  top: 50%;
+	  right: -10px;
+	  margin-top: -10px;
+	  border-left-color: rgb(249, 247, 237);
+	  border-right-width: 0;
+	}
+
+	.sigma-tooltip.right {
+	  margin-left: 12px;
+	}
+	.sigma-tooltip.right > .arrow {
+	  top: 50%;
+	  left: -10px;
+	  margin-top: -10px;
+	  border-right-color: rgb(249, 247, 237);
+	  border-left-width: 0;
+	}	
+/* 
+	#control-pane {
+	  top: 10px;
+	  right: 10px;
+	  position: absolute;
+	  width: 230px;
+	  background-color: rgb(249, 247, 237);
+	  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+	}
+*/
+	#control-pane > div {
+	  margin: 10px;
+	  overflow-x: auto;
+	}
+	.line {
+	  clear: both;
+	  display: block;
+	  width: 100%;
+	  margin: 0;
+	  padding: 12px 0 0 0;
+	  border-bottom: 1px solid #aac789;
+	  background: transparent;
+	}
+	.green {
+	  color: #437356;
+	}
+	h2.underline {
+	  color: #437356;
+	  background: #f4f0e4;
+	  margin: 0;
+	  border-radius: 2px;
+	  padding: 8px 12px;
+	  font-weight: 700;
+	}
+	.hidden {
+	  display: none;
+	  visibility: hidden;
+	}    
 	</style>
 </head>
 <body>
-	<h1>This is a graph of all the Packt Python content and topics!</h1>
-	<div id="container"></div>
+	<h1>Packt Python Graph</h1>
+	<div class="container-full">
+		<div class="row">
+			<div class="col-lg-9">
+				<div id="container"></div>
+			</div>
+			<div class="col-lg-3">
+				<div id="control-pane">
+					<h2 class="underline">filters</h2>
+					<div>
+				  		<h5>Minimum Degree <span id="min-degree-val">0</span></h5>
+				  			0 <input id="min-degree" type="range" min="0" max="0" value="0"> <span id="max-degree-value">0</span><br>
+					</div>
+					<div>
+				  		<h5>Minimum Edge Weight <span id="min-edge-val">0</span></h5>
+				  			0 <input id="min-edge" step="0.01" type="range" min="0" max="0" value="0"> <span id="max-edge-value">0</span><br>
+					</div>					
+					<div>
+				  		<h5>Node Type</h5>
+						<select id="node-category">
+							<option value="" selected>All Types</option>
+			  			</select>
+					</div>
+					<div>
+				  		<h5>Text Search</h5>
+				  		<input id="node-search" type="text">
+					</div>	
+					<span class="line"></span>
+					<div>
+				  		<button id="reset-btn">Reset filters</button>
+					</div>
+			  	</div>
+			  	<div id="infoPanel">
+			  	</div>	
+
+
+
+			</div>
+		</div>
+	</div>
+
+</div>
+	
 
 <script type="text/javascript">
-  sigma.parsers.json('static/data/testData.json', {
-    container: 'container',
-    settings: {
-      defaultNodeColor: '#ec5148'
-    }
+s= new sigma({
+	container: 'container',
+	renderer: {
+		container: document.getElementById('container'),
+		type: 'canvas'
+	},
+	settings: {
+		minNodeSize: 1,
+		maxNodeSize: 7,
+		minEdgeSize:0.1,
+		maxEdgeSize:0.5,
+			verbose:true,
+			labelThreshold:10,  
+			defaultEdgeType:"curve",
+			defaultLabelColor: "#000",
+		  defaultLabelSize: 14,
+		  defaultLabelBGColor: "#ddd",
+		  defaultHoverLabelBGColor: "#002147",
+		  defaultLabelHoverColor: "#fff",
+		nodeHaloColor: '#979696',
+		edgeHaloColor: '#979696',
+		nodeHaloSize: 10,
+		edgeHaloSize: 10
+	}
+});
+
+sigma.parsers.gexf(
+	'static/data/Graph1.gexf',
+	s,
+	function(s) {
+	// Initialize the Filter API
+	filter = sigma.plugins.filter(s);
+	updatePane(s.graph, filter);
+	function applyMinDegreeFilter(e) {
+			var v = e.target.value;
+			_.$('min-degree-val').textContent = v;
+
+			filter
+			.undo('min-degree')
+			.nodesBy(
+				function(n, options) {
+					return this.graph.degree(n.id) >= options.minDegreeVal;
+				},{
+					minDegreeVal: +v
+				},
+				'min-degree'
+			)
+			.apply();
+	};
+	function applyMinEdgeFilter(e) {
+			var v = e.target.value;
+			_.$('min-edge-val').textContent = v;
+			console.log(v);
+			filter
+			.undo('min-edge')
+			.edgesBy(
+				function(n, options) {
+					return n.weight > options.weight
+				},{
+					weight: +v
+				},
+				'min-edge'
+			)
+			.apply();
+	};	
+	function applyCategoryFilter(e) {
+		var c = e.target[e.target.selectedIndex].value;
+		filter
+		.undo('node-category')
+		.nodesBy(
+			function(n, options) {
+				return !c.length || n.attributes[options.property] === c;
+			},{
+				property: 'type'
+			},
+			'node-category'
+		)
+		.apply();
+  	}
+ 	function applySearchFilter(e) {
+		var c = e.target.value;
+		filter
+		.undo('node-search')
+		.nodesBy(
+			function(n, options) {
+				return n.label.toLowerCase().search(c) > -1;
+			},
+			{
+				property: 'RAWR'
+			},
+			'node-search'
+		)
+		.apply();
+  	}
+
+  	_.$('min-degree').addEventListener("input", applyMinDegreeFilter);  // for Chrome and FF
+  	_.$('min-degree').addEventListener("change", applyMinDegreeFilter); // for IE10+, that sucks
+	_.$('min-edge').addEventListener("input", applyMinEdgeFilter);  // for Chrome and FF
+  	_.$('min-edge').addEventListener("change", applyMinEdgeFilter); // for IE10+, that sucks  	
+  	_.$('node-category').addEventListener("change", applyCategoryFilter);	
+  	_.$('node-search').addEventListener("change", applySearchFilter);	
+  	
+	
+	s.refresh();
+	//s.startForceAtlas2();
+	//setTimeout(function(){ s.stopForceAtlas2();}, 3500);
+	}
+);
+
+
+function updatePane (graph, filter) {
+	// get max degree
+	var maxDegree = 0,
+		maxEdge =0,
+		categories = {};
+
+	// read nodes
+	graph.nodes().forEach(function(n) {
+			maxDegree = Math.max(maxDegree, graph.degree(n.id));
+			categories[n.attributes.type] = true;
+	});
+	graph.edges().forEach(function(n) {
+		maxEdge = Math.max(maxEdge, n.weight)
+	});
+
+	// min degree
+	_.$('min-degree').max = maxDegree;
+	  _.$('max-degree-value').textContent = maxDegree;
+	_.$('min-edge').max = maxEdge;
+	  _.$('max-edge-value').textContent = maxEdge;
+
+	// node category
+	var nodecategoryElt = _.$('node-category');
+	Object.keys(categories).forEach(function(c) {
+			var optionElt = document.createElement("option");
+			optionElt.text = c;
+			nodecategoryElt.add(optionElt);
+  	});
+
+	  // reset button
+	  _.$('reset-btn').addEventListener("click", function(e) {
+		_.$('min-degree').value = 0;
+		_.$('min-degree-val').textContent = '0';
+		_.$('node-category').selectedIndex = 0;
+		_.$('min-edge').value = 0;
+		_.$('min-edge-val').textContent = '0';		
+		filter.undo().apply();
+	  });
+
+};
+
+function renderHalo() {
+  s.renderers[0].halo({
+	nodes: s.graph.nodes()
   });
+}
+
+var metadata;
+$.getJSON('static/data/MetaData.json',
+		function (data){
+			metadata = data;
+		}
+);
+
+
+s.bind('clickNode', function(e) {
+	var adjacentNodes = [],
+		adjacentEdges = [];
+	adjacentNodes = adjacentNodes.concat(s.graph.adjacentNodes(e.data.node.id));
+	adjacentEdges = adjacentEdges.concat(s.graph.adjacentEdges(e.data.node.id));
+	s.renderers[0].halo({
+		nodes: adjacentNodes,
+		edges: adjacentEdges
+	});
+	var meta  = metadata[e.data.node.id];
+	console.log(meta);
+	template = '<h3><a href="'+meta.url+'" target="blank">'+meta.name+'</a></h3>';
+	if (meta['node type']=='Topic') {
+		template +='<b>A StackOverflow Tag with '+meta.size+' questions</b>';
+	} else {
+		template += '<b>An awesome Packt '+meta.type.slice(0,-1);
+		if (meta.authors != 'NULL') {
+			template +=' written by '+meta.authors.replace(',',' and ');
+		};
+		template += '</b><br>';
+		if (meta.type =='books') {
+			template +='Page count: '+meta['page count'];
+		} else {
+			template += 'Duration:' +meta['page count'];
+		};
+	};
+	
+	template += '<hr>'+meta['one liner'];
+	if (meta['node type']=='Topic') {
+		template+='(Taken from the StackOverflow wiki page)';
+	};
+	var related_topics = '<h4> Related Topics</h4><ul>';
+	var related_titles = '<h4> Related Titles</h4><ul>';
+	for (var i = adjacentNodes.length - 1; i >= 0; i--) {
+		t = adjacentNodes[i];
+		if( t.attributes.type=='Topic') {
+			related_topics += '<li>'+t.label +'</li>';
+		}
+		else {
+			related_titles += '<li>'+t.label +'</li>';
+		}
+	};
+	related_topics+='</ul>';
+	related_titles += '</ul>';
+	template += related_titles + related_topics;
+	console.log(adjacentNodes);
+	$('#infoPanel').empty().html(template);
+
+});
+s.refresh();
+
+
+s.bind('doubleClickNode',function(e){
+	var data = e.data.node;
+	console.log(data);
+
+})
+
+
+
+var filter;
+
+/**
+ * DOM utility functions
+ */
+var _ = {
+  $: function (id) {
+	return document.getElementById(id);
+  },
+
+  all: function (selectors) {
+	return document.querySelectorAll(selectors);
+  },
+
+  removeClass: function(selectors, cssClass) {
+	var nodes = document.querySelectorAll(selectors);
+	var l = nodes.length;
+	for ( i = 0 ; i < l; i++ ) {
+	  var el = nodes[i];
+	  // Bootstrap compatibility
+	  el.className = el.className.replace(cssClass, '');
+	}
+  },
+
+  addClass: function (selectors, cssClass) {
+	var nodes = document.querySelectorAll(selectors);
+	var l = nodes.length;
+	for ( i = 0 ; i < l; i++ ) {
+	  var el = nodes[i];
+	  // Bootstrap compatibility
+	  if (-1 == el.className.indexOf(cssClass)) {
+		el.className += ' ' + cssClass;
+	  }
+	}
+  },
+
+  show: function (selectors) {
+	this.removeClass(selectors, 'hidden');
+  },
+
+  hide: function (selectors) {
+	this.addClass(selectors, 'hidden');
+  },
+
+  toggle: function (selectors, cssClass) {
+	var cssClass = cssClass || "hidden";
+	var nodes = document.querySelectorAll(selectors);
+	var l = nodes.length;
+	for ( i = 0 ; i < l; i++ ) {
+	  var el = nodes[i];
+	  //el.style.display = (el.style.display != 'none' ? 'none' : '' );
+	  // Bootstrap compatibility
+	  if (-1 !== el.className.indexOf(cssClass)) {
+		el.className = el.className.replace(cssClass, '');
+	  } else {
+		el.className += ' ' + cssClass;
+	  }
+	}
+  }
+};
+
+
+
+
+
 </script>
 </body>
 </html>
