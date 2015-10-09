@@ -13,7 +13,9 @@
 	<script src="static/js/Linkurious/plugins/sigma.plugins.tooltips.min.js"></script>
 	<script src="static/js/Linkurious/plugins/sigma.plugins.animate.min.js"></script>
 	<script src="static/js/Linkurious/plugins/sigma.plugins.filter.min.js"></script>
-	<script src="static/js/Linkurious/plugins/sigma.layout.forceAtlas2.min.js"></script>	
+	<script src="static/js/Linkurious/plugins/sigma.layout.forceLink.min.js"></script>	
+	<script src="static/js/Linkurious/plugins/sigma.plugins.locate.min.js"></script>
+	<script src="static/js/Linkurious/plugins/sigma.plugins.poweredBy.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
 	<style type="text/css">
 	  #container {
@@ -23,123 +25,6 @@
 		background-color: #2c3e50;
 	  }
 
-	.sigma-tooltip {
-	  max-width: 240px;
-	  max-height: 280px;
-	  background-color: rgb(249, 247, 237);
-	  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-	  border-radius: 6px;
-	}
-
-	.sigma-tooltip-header {
-	  font-variant: small-caps;
-	  font-size: 120%;
-	  color: #437356;
-	  border-bottom: 1px solid #aac789;
-	  padding: 10px;
-	}
-
-	.sigma-tooltip-body {
-	  padding: 10px;
-	}
-
-	.sigma-tooltip-body th {
-	  color: #999;
-	  text-align: left;
-	}
-
-	.sigma-tooltip-footer {
-	  padding: 10px;
-	  border-top: 1px solid #aac789;
-	}
-
-	.sigma-tooltip > .arrow {
-	  border-width: 10px;
-	  position: absolute;
-	  display: block;
-	  width: 0;
-	  height: 0;
-	  border-color: transparent;
-	  border-style: solid;
-	}
-
-	.sigma-tooltip.top {
-	  margin-top: -12px;
-	}
-	.sigma-tooltip.top > .arrow {
-	  left: 50%;
-	  bottom: -10px;
-	  margin-left: -10px;
-	  border-top-color: rgb(249, 247, 237);
-	  border-bottom-width: 0;
-	}
-
-	.sigma-tooltip.bottom {
-	  margin-top: 12px;
-	}
-	.sigma-tooltip.bottom > .arrow {
-	  left: 50%;
-	  top: -10px;
-	  margin-left: -10px;
-	  border-bottom-color: rgb(249, 247, 237);
-	  border-top-width: 0;
-	}
-
-	.sigma-tooltip.left {
-	  margin-left: -12px;
-	}
-	.sigma-tooltip.left > .arrow {
-	  top: 50%;
-	  right: -10px;
-	  margin-top: -10px;
-	  border-left-color: rgb(249, 247, 237);
-	  border-right-width: 0;
-	}
-
-	.sigma-tooltip.right {
-	  margin-left: 12px;
-	}
-	.sigma-tooltip.right > .arrow {
-	  top: 50%;
-	  left: -10px;
-	  margin-top: -10px;
-	  border-right-color: rgb(249, 247, 237);
-	  border-left-width: 0;
-	}	
-/* 
-	#control-pane {
-	  top: 10px;
-	  right: 10px;
-	  position: absolute;
-	  width: 230px;
-	  background-color: rgb(249, 247, 237);
-	  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-	}
-*/
-	#control-pane > div {
-	  margin: 10px;
-	  overflow-x: auto;
-	}
-	.line {
-	  clear: both;
-	  display: block;
-	  width: 100%;
-	  margin: 0;
-	  padding: 12px 0 0 0;
-	  border-bottom: 1px solid #aac789;
-	  background: transparent;
-	}
-	.green {
-	  color: #437356;
-	}
-	h2.underline {
-	  color: #437356;
-	  background: #f4f0e4;
-	  margin: 0;
-	  border-radius: 2px;
-	  padding: 8px 12px;
-	  font-weight: 700;
-	}
 	.hidden {
 	  display: none;
 	  visibility: hidden;
@@ -155,29 +40,30 @@
 			</div>
 			<div class="col-lg-3">
 				<div id="control-pane">
-					<h2 class="underline">filters</h2>
-					<div>
-				  		<h5>Minimum Degree <span id="min-degree-val">0</span></h5>
-				  			0 <input id="min-degree" type="range" min="0" max="0" value="0"> <span id="max-degree-value">0</span><br>
-					</div>
-					<div>
-				  		<h5>Minimum Edge Weight <span id="min-edge-val">0</span></h5>
-				  			0 <input id="min-edge" step="0.01" type="range" min="0" max="0" value="0"> <span id="max-edge-value">0</span><br>
-					</div>					
-					<div>
-				  		<h5>Node Type</h5>
-						<select id="node-category">
+					<h2>Graph Filters</h2>
+					<div class="form-group">
+				  		<label for="min-degree">Minimum Degree -<span id="min-degree-val">0</span></label>
+				  			0 <input class="form-control" id="min-degree" type="range" min="0" max="0" value="0"> <span id="max-degree-value">0</span><br>
+				  		<label for"min-edge">Minimum Edge Weight -<span id="min-edge-val">0</span></label>
+				  			0 <input class="form-control" id="min-edge" step="0.01" type="range" min="0" max="0" value="0"> <span id="max-edge-value">0</span><br>
+				  		<label for="node-type">Node Type</label>
+						<select class="form-control" id="node-type">
 							<option value="" selected>All Types</option>
 			  			</select>
-					</div>
-					<div>
-				  		<h5>Text Search</h5>
-				  		<input id="node-search" type="text">
+				  		<label for="node-category">Node Category</label>
+						<select class="form-control" id="node-category">
+							<option value="" selected>All Categories</option>
+			  			</select>
+				  		<label for="node-search">Text Search</label>
+				  		<input class="form-control" id="node-search" type="text">
 					</div>	
 					<span class="line"></span>
-					<div>
-				  		<button id="reset-btn">Reset filters</button>
+					<div class="btn-group" role="group">
+				  		<button id="reset-btn" class="btn btn-primary">Reset filters</button>
+				  		<button id="layout" class="btn btn-warning">Turn ForceLink Layout on/off
+					</button>
 					</div>
+					
 			  	</div>
 			  	<div id="infoPanel">
 			  	</div>	
@@ -203,32 +89,42 @@ s= new sigma({
 		maxNodeSize: 7,
 		minEdgeSize:0.1,
 		maxEdgeSize:0.5,
-			verbose:true,
-			labelThreshold:10,  
-			defaultEdgeType:"curve",
-			defaultLabelColor: "#000",
-		  defaultLabelSize: 14,
-		  defaultLabelBGColor: "#ddd",
-		  defaultHoverLabelBGColor: "#002147",
-		  defaultLabelHoverColor: "#fff",
+		verbose:true,
+		labelThreshold:5,  
+		defaultEdgeType:"curve",
+		defaultLabelColor: "#000",
+		defaultLabelSize: 14,
+		defaultLabelBGColor: "#ddd",
+		defaultHoverLabelBGColor: "#002147",
+		defaultLabelHoverColor: "#fff",
 		nodeHaloColor: '#979696',
 		edgeHaloColor: '#979696',
 		nodeHaloSize: 10,
-		edgeHaloSize: 10
+		edgeHaloSize: 10,
+	    	zoomMin: 0.01,
+	    	zoomMax: 10,	    	
 	}
 });
-
 sigma.parsers.gexf(
 	'static/data/Graph1.gexf',
 	s,
 	function(s) {
 	// Initialize the Filter API
 	filter = sigma.plugins.filter(s);
-	updatePane(s.graph, filter);
+	$.getJSON('static/data/MetaData.json',
+		function (data){
+			s.graph.nodes().forEach(function (n){
+				for (key in data[n.id]) {
+					n.attributes[key]=data[n.id][key];
+				};
+			})
+		updatePane(s.graph, filter);	
+		}
+	);
+	
 	function applyMinDegreeFilter(e) {
 			var v = e.target.value;
-			_.$('min-degree-val').textContent = v;
-
+			$('#min-degree-val').textContent = v;
 			filter
 			.undo('min-degree')
 			.nodesBy(
@@ -243,8 +139,7 @@ sigma.parsers.gexf(
 	};
 	function applyMinEdgeFilter(e) {
 			var v = e.target.value;
-			_.$('min-edge-val').textContent = v;
-			console.log(v);
+			$('#min-edge-val').textContent = v;
 			filter
 			.undo('min-edge')
 			.edgesBy(
@@ -257,7 +152,21 @@ sigma.parsers.gexf(
 			)
 			.apply();
 	};	
-	function applyCategoryFilter(e) {
+	function applyTypeFilter(e) {
+		var c = e.target[e.target.selectedIndex].value;
+		filter
+		.undo('node-type')
+		.nodesBy(
+			function(n, options) {
+				return !c.length || n.attributes[options.property] === c;
+			},{
+				property: 'type'
+			},
+			'node-type'
+		)
+		.apply();
+  	}
+  	function applyCategoryFilter(e) {
 		var c = e.target[e.target.selectedIndex].value;
 		filter
 		.undo('node-category')
@@ -265,7 +174,7 @@ sigma.parsers.gexf(
 			function(n, options) {
 				return !c.length || n.attributes[options.property] === c;
 			},{
-				property: 'type'
+				property: 'category'
 			},
 			'node-category'
 		)
@@ -287,57 +196,98 @@ sigma.parsers.gexf(
 		.apply();
   	}
 
-  	_.$('min-degree').addEventListener("input", applyMinDegreeFilter);  // for Chrome and FF
-  	_.$('min-degree').addEventListener("change", applyMinDegreeFilter); // for IE10+, that sucks
-	_.$('min-edge').addEventListener("input", applyMinEdgeFilter);  // for Chrome and FF
-  	_.$('min-edge').addEventListener("change", applyMinEdgeFilter); // for IE10+, that sucks  	
-  	_.$('node-category').addEventListener("change", applyCategoryFilter);	
-  	_.$('node-search').addEventListener("change", applySearchFilter);	
-  	
-	
+  	$('#min-degree').change(applyMinDegreeFilter);  // for Chrome and FF
+  	$('#min-edge').change(applyMinEdgeFilter); // for IE10+, that sucks  	
+  	$('#node-type').change(applyTypeFilter);	
+  	$('#node-category').change(applyCategoryFilter);
+  	$('#node-search').change(applySearchFilter);	
+ 
 	s.refresh();
-	//s.startForceAtlas2();
-	//setTimeout(function(){ s.stopForceAtlas2();}, 3500);
+
+	var hash = window.location.hash.replace('#','');
+	if (hash!='') {locateNode(hash)};
 	}
 );
+
+var conf = {
+	animation: {
+	node: {
+	      duration: 800
+	},
+	edge: {
+		duration: 800
+	      },
+	center: {
+	      duration: 300
+	}
+	},
+	//focusOut: true,
+	zoomDef: 2
+};	
+var locate = sigma.plugins.locate(s,conf);
+if (!s.settings('autoRescale')) {
+	sigma.utils.zoomTo(s.camera, 0, 0, conf.zoomDef);
+};
+
+function locateNode (nid) {
+	if (nid == '') {
+		locate.center(1);
+	}
+	else {
+    		locate.nodes(nid);
+	}
+};
 
 
 function updatePane (graph, filter) {
 	// get max degree
 	var maxDegree = 0,
 		maxEdge =0,
+		types = {},
 		categories = {};
-
 	// read nodes
 	graph.nodes().forEach(function(n) {
 			maxDegree = Math.max(maxDegree, graph.degree(n.id));
-			categories[n.attributes.type] = true;
+			types[n.attributes.type] = true;
+			if (n.attributes.category){
+				categories[n.attributes.category] = true;
+			}
+			
 	});
 	graph.edges().forEach(function(n) {
 		maxEdge = Math.max(maxEdge, n.weight)
 	});
 
 	// min degree
-	_.$('min-degree').max = maxDegree;
-	  _.$('max-degree-value').textContent = maxDegree;
-	_.$('min-edge').max = maxEdge;
-	  _.$('max-edge-value').textContent = maxEdge;
+	$('#min-degree')[0].max = maxDegree;
+	$('#max-degree-value').html(maxDegree);
+	$('#min-edge')[0].max = maxEdge;
+	$('#max-edge-value').html(maxEdge);
 
 	// node category
-	var nodecategoryElt = _.$('node-category');
-	Object.keys(categories).forEach(function(c) {
-			var optionElt = document.createElement("option");
-			optionElt.text = c;
-			nodecategoryElt.add(optionElt);
+	var nodecategoryElt = $('#node-type');
+	Object.keys(types).forEach(function(c) {
+			var optionElt = $("<option></option>");
+			optionElt.append(c);
+			nodecategoryElt.append(optionElt);
   	});
 
-	  // reset button
-	  _.$('reset-btn').addEventListener("click", function(e) {
-		_.$('min-degree').value = 0;
-		_.$('min-degree-val').textContent = '0';
-		_.$('node-category').selectedIndex = 0;
-		_.$('min-edge').value = 0;
-		_.$('min-edge-val').textContent = '0';		
+	var nodecategoryElt = $('#node-category');
+	Object.keys(categories).forEach(function(c) {
+			var optionElt = $("<option></option>");
+			optionElt.append(c);
+			nodecategoryElt.append(optionElt);
+  	});
+
+
+	// reset button
+	  	$('#reset-btn').on("click", function(e) {
+		$('#min-degree').val(0);
+		$('#min-degree-val').html('0');
+		$('#node-type').selectedIndex = 0;
+		$('#node-category').selectedIndex = 0;
+		$('#min-edge').val(0);
+		$('#min-edge-val').html('0');	
 		filter.undo().apply();
 	  });
 
@@ -349,15 +299,9 @@ function renderHalo() {
   });
 }
 
-var metadata;
-$.getJSON('static/data/MetaData.json',
-		function (data){
-			metadata = data;
-		}
-);
-
 
 s.bind('clickNode', function(e) {
+	
 	var adjacentNodes = [],
 		adjacentEdges = [];
 	adjacentNodes = adjacentNodes.concat(s.graph.adjacentNodes(e.data.node.id));
@@ -366,37 +310,63 @@ s.bind('clickNode', function(e) {
 		nodes: adjacentNodes,
 		edges: adjacentEdges
 	});
-	var meta  = metadata[e.data.node.id];
+	var meta  = e.data.node.attributes;
 	console.log(meta);
-	template = '<h3><a href="'+meta.url+'" target="blank">'+meta.name+'</a></h3>';
-	if (meta['node type']=='Topic') {
-		template +='<b>A StackOverflow Tag with '+meta.size+' questions</b>';
-	} else {
-		template += '<b>An awesome Packt '+meta.type.slice(0,-1);
-		if (meta.authors != 'NULL') {
-			template +=' written by '+meta.authors.replace(',',' and ');
-		};
-		template += '</b><br>';
-		if (meta.type =='books') {
-			template +='Page count: '+meta['page count'];
-		} else {
-			template += 'Duration:' +meta['page count'];
-		};
-	};
-	
-	template += '<hr>'+meta['one liner'];
-	if (meta['node type']=='Topic') {
-		template+='(Taken from the StackOverflow wiki page)';
+	switch(meta['node type']){
+		case 'topic':
+			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.name+'</a></h3>';
+			template +='<b>A StackOverflow Tag with '+meta.size+' questions</b><hr>';	
+			template += '<p>'+meta['one liner']+'</p>(Taken from the StackOverflow wiki page)<br>';
+			template += '<b><a href="'+meta.url+'" target="blank">Read More</a></b>';
+		break;
+		case 'books':
+			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.title+'</a></h3>';
+			template +='<b> An Awesome Packt Book';
+			if (meta.authors != 'NULL') {
+				template += ' written by '+meta.authors.replace(',',' and ');
+			}
+			template += '</b><hr>';
+			template += '<p>'+meta['one liner']+'</p>';
+			template +='<br>Page count: </b>'+meta['page count']+'<br>';
+			template += '<br>Published:</b> '+meta['publication date']+'<br>';
+			//put CTA here?
+		break;
+		case 'videos':
+			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.title+'</a></h3>';
+			template +='<b> An Awesome Packt Video';
+			if (meta.authors != 'NULL') {
+				template += ' written by '+meta.authors.replace(',',' and ');
+			}
+			template += '</b><hr>';
+			template += '<p>'+meta['one liner']+'</p>';
+			template +='<br>Duration: </b>'+meta['page count']+'<br>';
+			template += '<br>Published:</b> '+meta['publication date']+'<br>';
+			//put CTA here?
+
+		break;
+		case 'blog':
+			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.title+'</a></h3>';
+			template += '<b>A Blog written by '+meta.authors.replace(',',' and ')+'<hr>';
+			template += '<br>Published:</b> '+meta['publication date']+'<br>';
+			template += '<p>'+meta['one liner']+'</p>';
+		break;
+		case 'techprimer':
+			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.title+'</a></h3>';
+			template += '<b>A Packt Tech Primer<hr>';
+			template += '<br>Published:</b> '+meta['publication date']+'<br>';
+			template += '<p>'+meta['one liner']+'</p>';
+		break;
+
 	};
 	var related_topics = '<h4> Related Topics</h4><ul>';
-	var related_titles = '<h4> Related Titles</h4><ul>';
+	var related_titles = '<h4> Related Packt Content</h4><ul>';
 	for (var i = adjacentNodes.length - 1; i >= 0; i--) {
 		t = adjacentNodes[i];
-		if( t.attributes.type=='Topic') {
-			related_topics += '<li>'+t.label +'</li>';
+		if( t.attributes.type=='topic') {
+			related_topics += '<li><a class="locate" data-id="'+t.id+'">'+t.label +'</a></li>';
 		}
 		else {
-			related_titles += '<li>'+t.label +'</li>';
+			related_titles += '<li><a class="locate" data-id="'+t.id+'">'+t.label +'</a></li>';
 		}
 	};
 	related_topics+='</ul>';
@@ -404,81 +374,24 @@ s.bind('clickNode', function(e) {
 	template += related_titles + related_topics;
 	console.log(adjacentNodes);
 	$('#infoPanel').empty().html(template);
-
+	$('.locate').on('click', function(e){
+		locateNode($(this).attr('data-id'));
+	})
 });
-s.refresh();
 
+$('#layout').on('click',function () {
+	var config = {
+		linLogMode:true,
+		barnesHutOptimize:true,
+		alignNodeSiblings :true,
 
-s.bind('doubleClickNode',function(e){
-	var data = e.data.node;
-	console.log(data);
-
+	}
+	if (! sigma.layouts.isForceLinkRunning()) {
+		sigma.layouts.startForceLink(s,{});
+	} else {
+		sigma.layouts.stopForceLink(s,{});
+	};
 })
-
-
-
-var filter;
-
-/**
- * DOM utility functions
- */
-var _ = {
-  $: function (id) {
-	return document.getElementById(id);
-  },
-
-  all: function (selectors) {
-	return document.querySelectorAll(selectors);
-  },
-
-  removeClass: function(selectors, cssClass) {
-	var nodes = document.querySelectorAll(selectors);
-	var l = nodes.length;
-	for ( i = 0 ; i < l; i++ ) {
-	  var el = nodes[i];
-	  // Bootstrap compatibility
-	  el.className = el.className.replace(cssClass, '');
-	}
-  },
-
-  addClass: function (selectors, cssClass) {
-	var nodes = document.querySelectorAll(selectors);
-	var l = nodes.length;
-	for ( i = 0 ; i < l; i++ ) {
-	  var el = nodes[i];
-	  // Bootstrap compatibility
-	  if (-1 == el.className.indexOf(cssClass)) {
-		el.className += ' ' + cssClass;
-	  }
-	}
-  },
-
-  show: function (selectors) {
-	this.removeClass(selectors, 'hidden');
-  },
-
-  hide: function (selectors) {
-	this.addClass(selectors, 'hidden');
-  },
-
-  toggle: function (selectors, cssClass) {
-	var cssClass = cssClass || "hidden";
-	var nodes = document.querySelectorAll(selectors);
-	var l = nodes.length;
-	for ( i = 0 ; i < l; i++ ) {
-	  var el = nodes[i];
-	  //el.style.display = (el.style.display != 'none' ? 'none' : '' );
-	  // Bootstrap compatibility
-	  if (-1 !== el.className.indexOf(cssClass)) {
-		el.className = el.className.replace(cssClass, '');
-	  } else {
-		el.className += ' ' + cssClass;
-	  }
-	}
-  }
-};
-
-
 
 
 
