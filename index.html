@@ -75,9 +75,10 @@
   <!-- we force the loading of the font awesome -->
   <i class="fa fa-camera-retro fa-1x" style="color: rgba(0,0,0,0);"></i>
 	<h1>Packt Python Graph</h1>
-	<div class="container-full">
+	<div class="container-fluid">
+	<div class="row-fluid"><img src="static/img/Chart_Banner.png"></div>
 	<div class="row">
-		<div class="col-md-9">
+		<div class="row">
 				<div id="Copy">
 					<p>
 						This is a graph showing a set of StackOverflow topics, and Packt content, and relations between them all. The data comes from a Neo4j instance we use internally at Packt. the connections are generated algorithmically using Python, and the visualisation is built with <a href="https://github.com/Linkurious/linkurious.js" target="new">Linkurious.js</a> (which is built on the <b>awesome</b> <a href="https://github.com/jacomyal/sigma.js" target="new">Sigma.js</a>).
@@ -91,7 +92,6 @@
 					</p>
 				</div>			
 		</div>
-		<div class="col-md-3"><img src="static/img/packt_logo.png"></div>
 	</div>
 		<div class="row">
 			<div class="col-md-9">
@@ -316,7 +316,7 @@ sigma.parsers.gexf(
 
 	$('#zoomIn').on('click',function(){
 		console.log(Rend.camera.ratio)
-		if (Rend.camera.ratio>0.3) {
+		if (Rend.camera.ratio>0.5) {
 			Rend.camera.ratio =Rend.camera.ratio -0.5;	
 			s.refresh();
 		};
