@@ -8,7 +8,6 @@
 	<script type="text/javascript" src="static/js/Linkurious/sigma.min.js"></script>
 	<script type="text/javascript" src="static/js/Linkurious/plugins/sigma.parsers.gexf.min.js"></script>
 	<script type="text/javascript" src="static/js/Linkurious/plugins/sigma.renderers.customEdgeShapes.min.js"></script>
-	<script type="text/javascript" src="static/js/Linkurious/plugins/sigma.renderers.halo.min.js"></script>
 	<script type="text/javascript" src="static/js/Linkurious/plugins/sigma.helpers.graph.min.js"></script>
 	<script src="static/js/Linkurious/plugins/sigma.plugins.tooltips.min.js"></script>
 	<script src="static/js/Linkurious/plugins/sigma.plugins.animate.min.js"></script>
@@ -23,7 +22,7 @@
 		max-width: 1500px;
 		height: 850px;
 		margin: auto;
-		background-color: #2c3e50;
+		background-color: #EBF5FF;
 	  }
 
 	.hidden {
@@ -33,15 +32,79 @@
 	</style>
 </head>
 <body>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel">Help!!</h3>
+      </div>
+      <div class="modal-body">
+       	<h4>Navigation</h4>
+       	<p>Navigate around the graph by clicking and dragging. Zoom in or out with the mousewheel, or, if you're on some variety of <a href="http://www.theregister.co.uk/2015/09/24/whither_the_fondleslab/">fondleslab</a>, touch gestures should work. Alternatively, use the zoom buttons underneath the graph.</p>
+       	<p>
+       		Double-clicking anywhere on the graph will also zoom in on that location.
+       	</p>
+       	<h4>Filtering</h4>
+       	<p>
+       		The filters at the right of the page allow you to view a subset of the graph. The sliders will show only nodes with a given minimum Degree (number of edges) or edges with a weight above a certain threshold.
+       	</p>
+       	<p>
+       		The Dropdowns allow you to filter to only certain types of nodes, or nodes falling under a particular category (Packt content nodes only). Finally, you can do a text search on the node labels (case insensitive).       		
+       	</p>
+       	<p>The blue button will undo all the active filters and show the full graph again</p>
+       	<h4>Nodes</h4>
+       	<p>
+       		Clicking on a node will bring up another panel containing information about that node. Clicking on the title of the node in this panel will take you to the page associated with that node.
+       	</p>
+       	<p>Also shown is a list of adjacent nodes, segmented into Packt content (split by category) or StackOverflowTags</p>
+       	<br>
+       	<h4 title="go Stick your head in a pig">Share and Enjoy</h4>
+       	<p>
+       		When you select a node, the right hand panel will also display a url which will display this graph, zoomed into the selected node.
+       	</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
   <!-- we force the loading of the font awesome -->
   <i class="fa fa-camera-retro fa-1x" style="color: rgba(0,0,0,0);"></i>
 	<h1>Packt Python Graph</h1>
 	<div class="container-full">
+	<div class="row">
+		<div class="col-md-10">
+				<div id="Copy">
+					<p>
+						This is a graph showing a set of StackOverflow topics, and Packt content, and relations between them all. The data comes from a Neo4j instance we use internally at Packt. the connections are generated algorithmically using Python, and the visualisation is built with <a href="https://github.com/Linkurious/linkurious.js" target="new">Linkurious.js</a> (which is built on the awesome <a href="https://github.com/jacomyal/sigma.js" target="new">Sigma.js</a>!)
+					</p>
+					<p>
+						This graph has been put together Packt's Python Week. For more information on how all this was put together, read this <b>blog</b>
+						<b>Some bit of copy which tempts users into looking for the discounted books and buying the fuckers!</b>
+					</p>
+					<p>
+						For help navigating the graph, <a href="#" data-toggle="modal" data-target="#myModal">click here!</a>.
+					</p>
+				</div>			
+		</div>
+		<div class="col-md-2"><img src="static/img/packt_logo.PNG"></div>
+	</div>
 		<div class="row">
-			<div class="col-lg-9">
+			<div class="col-md-9">
+
 				<div id="container"></div>
+				<div id="ZoomDiv" class="col-md-6 col-md-offset-5">
+					<button  id="zoomIn" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
+					<button  id="zoomOut" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span></button>
+					<button  id="zoomDef" class="btn btn-default"><span class="glyphicon glyphicon-resize-full"></span></button>
+				</div>
+			
 			</div>
-			<div class="col-lg-3">
+			<div class="col-md-3">
 				<div id="control-pane">
 					<h2>Graph Filters</h2>
 					<div class="form-group">
@@ -81,6 +144,7 @@
 	
 
 <script type="text/javascript">
+$('#myModal').modal({show:false});
 s= new sigma({
 	container: 'container',
 	renderer: {
@@ -89,23 +153,19 @@ s= new sigma({
 	},
 	settings: {
 		minNodeSize: 1,
-		maxNodeSize: 7,
+		maxNodeSize: 14,
 		minEdgeSize:0.1,
 		maxEdgeSize:0.5,
 		verbose:true,
-		labelThreshold:5,  
+		labelThreshold:10,  
 		defaultEdgeType:"curve",
 		defaultLabelColor: "#000",
 		defaultLabelSize: 14,
 		defaultLabelBGColor: "#ddd",
 		defaultHoverLabelBGColor: "#002147",
 		defaultLabelHoverColor: "#fff",
-		nodeHaloColor: '#979696',
-		edgeHaloColor: '#979696',
-		nodeHaloSize: 10,
-		edgeHaloSize: 10,
-	    	zoomMin: 0.01,
-	    	zoomMax: 10,
+	    	zoomMin: 0.05,
+	    	zoomMax: 1,
 	      glyphScale: 0.7,
 	      glyphFillColor: '#666',
 	      glyphTextColor: 'white',
@@ -194,7 +254,7 @@ sigma.parsers.gexf(
 			'node-type'
 		)
 		.apply();
-		locateNode(nids);
+
   	}
   	function applyCategoryFilter(e) {
 		var c = e.target[e.target.selectedIndex].value,
@@ -212,9 +272,9 @@ sigma.parsers.gexf(
 			},
 			'node-category'
 		)
-		.apply();
+		.apply();		
 		locateNode(nids);
-  	}
+  	};
  	function applySearchFilter(e) {
 
 		var c = e.target.value,
@@ -250,10 +310,32 @@ sigma.parsers.gexf(
 	})
 
 	s.refresh();
+
 	var hash = window.location.hash.replace('#','');
 	if (hash!='') {locateNode(hash)};
-	}
-);
+
+	$('#zoomIn').on('click',function(){
+		console.log(Rend.camera.ratio)
+		if (Rend.camera.ratio>0.3) {
+			Rend.camera.ratio =Rend.camera.ratio -0.5;	
+			s.refresh();
+		};
+		
+		
+	})
+	$('#zoomOut').on('click',function(){
+		if (Rend.camera.ratio<10) {
+			Rend.camera.ratio =Rend.camera.ratio +0.5;
+			s.refresh();
+		};	
+		
+	})
+	$('#zoomDef').on('click',function(){
+		console.log(Rend.camera.ratio)
+		Rend.camera.ratio =1;
+		s.refresh();
+	})
+});
 
 var conf = {
 	animation: {
@@ -267,8 +349,7 @@ var conf = {
 		      duration: 300
 		}
 	},
-	focusOut: true,
-	zoomDef: 0.5
+	//focusOut: true,
 };	
 var locate = sigma.plugins.locate(s,conf);
 if (!s.settings('autoRescale')) {
@@ -344,83 +425,99 @@ function updatePane (graph, filter) {
 
 };
 
-function renderHalo() {
-  s.renderers[0].halo({
-	nodes: s.graph.nodes()
-  });
-}
+
 
 s.bind('clickNode', function(e) {
 	var adjacentNodes = [],
 		adjacentEdges = [];
 	adjacentNodes = adjacentNodes.concat(s.graph.adjacentNodes(e.data.node.id));
 	adjacentEdges = adjacentEdges.concat(s.graph.adjacentEdges(e.data.node.id));
-	s.renderers[0].halo({
-		nodes: adjacentNodes,
-		edges: adjacentEdges
-	});
-	var meta  = e.data.node.attributes;;
+	var meta  = e.data.node.attributes;
+	template = '<hr><label for="sharDis">Shere this!</label><input class="form-control" type="text" value="gregroberts.github.io#'+e.data.node.id+'">';
 	switch(meta['node type']){
 		case 'topic':
-			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.name+'</a></h3>';
+			template += '<h3><a href="'+meta.url+'" target="new">'+meta.name+'</a></h3>';
 			template +='<b>A StackOverflow Tag with '+meta.size+' questions</b><hr>';	
-			template += '<p>'+meta['one liner']+'</p><i>(Taken from the StackOverflow wiki page)</i><br>';
-			template += '<b><a href="'+meta.url+'" target="blank">Read More</a></b>';
+			template += '<p>'+meta['one liner'];
+			template += '<b><a href="'+meta.url+'" target="new">Read More...</a></b>'
+			template +='</p><i>(Taken from the StackOverflow wiki page)</i><br>';
+			;
 		break;
 		case 'books':
-			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.title+'</a></h3>';
-			template +='<b> An Awesome Packt Book';
+			template += '<h3><a href="'+meta.url+'" target="new">'+meta.title+'</a></h3>';
+			template += '<table><tr><td style="padding-right:10px"><a href="'+meta.url+'" target="new"><img style="diplay:inline" src="https://packtpub.com/'+meta['cover image']+'" height="220" ></img></a></td>';
+
+			template +='<td>'+meta['one liner']+'<br>';
 			if (meta.authors != 'NULL') {
 				template += ' written by '+meta.authors.replace(',',' and ');
 			}
-			template += '</b><hr>';
-			template += '<p>'+meta['one liner']+'</p>';
 			template +='<br>Page count: </b>'+meta['page count']+'<br>';
 			template += '<br>Published:</b> '+meta['publication date']+'<br>';
+			template+='</td></tr></table><br>';	
+			console.log(meta);
+			if (meta['on offer']!='') {
+				template += '<a target="new" href="https://packtpub.com/add_to_cart/'+meta['on offer']+'"><button class="btn btn-success"><b>Hey! This title is on special offer for Python week! Click here to save 20%</b></button></a>';
+			};
 			//put CTA here?
 		break;
 		case 'videos':
-			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.title+'</a></h3>';
-			template +='<b> An Awesome Packt Video';
+			template += '<h3><a href="'+meta.url+'" target="new">'+meta.title+'</a></h3>';
+			template += '<table><tr><td style="padding-right:10px"><a href="'+meta.url+'" target="new"><img style="diplay:inline" src="https://packtpub.com/'+meta['cover image']+'" height="220" ></img></a></td>';
+
+			template +='<td>'+meta['one liner']+'<br>';
 			if (meta.authors != 'NULL') {
 				template += ' written by '+meta.authors.replace(',',' and ');
 			}
-			template += '</b><hr>';
-			template += '<p>'+meta['one liner']+'</p>';
 			template +='<br>Duration: </b>'+meta['page count']+'<br>';
 			template += '<br>Published:</b> '+meta['publication date']+'<br>';
-			//put CTA here?
+			template+='</td></tr></table><br>';	
+				console.log(meta);		
+			if (meta['on offer']!='') {
+				template += '<a target="new" href="https://packtpub.com/add_to_cart/'+meta['on offer']+'"><button class="btn btn-success"><b>Hey! This title is on special offer for Python week! Click here to save 20%</b></button></a>';
+			};
 
 		break;
 		case 'blog':
-			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.title+'</a></h3>';
+			template += '<h3><a href="'+meta.url+'" target="new">'+meta.title+'</a></h3>';
 			template += '<b>A Blog written by '+meta.authors.replace(',',' and ')+'<hr>';
 			template += '<br>Published:</b> '+meta['publication date']+'<br>';
 			template += '<p>'+meta['one liner']+'</p>';
 		break;
 		case 'techprimer':
-			template = '<h3><a href="'+meta.url+'" target="blank">'+meta.title+'</a></h3>';
+			template += '<h3><a href="'+meta.url+'" target="new">'+meta.title+'</a></h3>';
 			template += '<b>A Packt Tech Primer<hr>';
 			template += '<br>Published:</b> '+meta['publication date']+'<br>';
 			template += '<p>'+meta['one liner']+'</p>';
 		break;
 
 	};
-	var related_topics = '<h4> Related Topics</h4><ul>';
-	var related_titles = '<h4> Related Packt Content</h4><ul>';
+	var related_topics = '<table class="table table-striped"><thead><th>Related Topic Nodes</th></thead><tbody>';
+	var related_titles = '<table class="table table-striped"><tbody>';
+	var categorise = {};
 	for (var i = adjacentNodes.length - 1; i >= 0; i--) {
 		t = adjacentNodes[i];
 		if( t.attributes.type=='topic') {
-			related_topics += '<li><a class="locate" data-id="'+t.id+'">'+t.label +'</a></li>';
+			related_topics += '<tr><td><a class="locate" data-id="'+t.id+'">'+t.label +'</a></td></tr>';
 		}
 		else {
-			related_titles += '<li><a class="locate" data-id="'+t.id+'">'+t.label +'</a></li>';
+			if (t.attributes.category in categorise) {
+				categorise[t.attributes.category].push([t.id,t.label]);
+			} else{
+				categorise[t.attributes.category] = [[t.id,t.label]];
+			};
+			
 		}
 	};
-	related_topics+='</ul>';
-	related_titles += '</ul>';
+	for (key in categorise) {
+		related_titles +='<tr><th>Related '+key+' Nodes</th></tr>';
+		for (var i = categorise[key].length - 1; i >= 0; i--) {
+			var j = categorise[key][i];
+			related_titles += '<tr><td><a class="locate" data-id="'+j[0]+'">'+j[1] +'</a></td></tr>';	
+		};
+	};
+	related_topics+='</tbody></table>';
+	related_titles += '</tbody></table>';
 	template += related_titles + related_topics;
-	console.log(adjacentNodes);
 	$('#infoPanel').empty().html(template);
 	$('.locate').on('click', function(e){
 		locateNode($(this).attr('data-id'));
@@ -432,12 +529,11 @@ $('#layout').on('click',function () {
 		linLogMode:true,
 		barnesHutOptimize:true,
 		alignNodeSiblings :true,
-
 	}
 	if (! sigma.layouts.isForceLinkRunning()) {
-		sigma.layouts.startForceLink(s,{});
+		sigma.layouts.startForceLink(s,config);
 	} else {
-		sigma.layouts.stopForceLink(s,{});
+		sigma.layouts.stopForceLink(s,config);
 	};
 })
 
