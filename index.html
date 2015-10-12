@@ -429,7 +429,7 @@ s.bind('clickNode', function(e) {
 	adjacentNodes = adjacentNodes.concat(s.graph.adjacentNodes(e.data.node.id));
 	adjacentEdges = adjacentEdges.concat(s.graph.adjacentEdges(e.data.node.id));
 	var meta  = e.data.node.attributes;
-	template = '<hr><label for="sharDis">Shere this!</label><input class="form-control" type="text" value="gregroberts.github.io#'+e.data.node.id+'">';
+	template = '<hr><label for="sharDis">Share this!</label><input class="form-control" type="text" value="gregroberts.github.io#'+e.data.node.id+'">';
 	switch(meta['node type']){
 		case 'topic':
 			template += '<h3><a href="'+meta.url+'" target="new">'+meta.name+'</a></h3>';
