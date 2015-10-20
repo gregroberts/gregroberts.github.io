@@ -75,7 +75,7 @@
   <i class="fa fa-camera-retro fa-1x" style="color: rgba(0,0,0,0);"></i>
 	<div class="container">
 
-	<div class="row-fluid"><a href="https://www.packtpub.com/packt/offers/pythonweek" target="new"><img class="img-responsive" src="static/img/Chart_Banner.png"/></a></div>
+	<div class="row-fluid"><a href="https://www.packtpub.com/packt/offers/free-learning" target="new"><img class="img-responsive" src="static/img/Chart_Banner_FL.png"/></a></div>
 	<div class="row">
 				<div id="Copy">
 					<p>
@@ -453,11 +453,12 @@ s.bind('clickNode', function(e) {
 			template +='<br>Page count: </b>'+meta['page count']+'<br>';
 			template += '<br>Published:</b> '+meta['publication date']+'<br>';
 			template+='</td></tr></table><br>';	
+			/*
 			console.log(meta);
 			if (meta['on offer']!='') {
 				template += '<a target="new" href="https://packtpub.com/add_to_cart/'+meta['on offer']+'"><button class="btn btn-success"><b>Hey! This title is on special offer for Python week!<br> Click here to save 50%</b></button></a>';
 			};
-			//put CTA here?
+			*/
 		break;
 		case 'videos':
 			template += '<h3><a href="'+meta.url+'" target="new">'+meta.title+'</a></h3>';
